@@ -9,10 +9,18 @@ class Aluno extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'CPF', 'dataNascimento'];
+    protected $primaryKey = 'id';
 
-    public function curso()
+    protected $fillable = 
+    [
+        'name', 
+        'curso_id',
+        'CPF', 
+        'dataNascimento'
+    ];
+
+    public function cursos()
     {
         return $this->belongsTo(Curso::class, 'curso_id', 'id');
-    }	
+    }
 }

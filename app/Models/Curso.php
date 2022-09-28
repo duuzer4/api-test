@@ -9,9 +9,10 @@ class Curso extends Model
 {
     use HasFactory;
 
+    protected $primaryKey = 'id';
     protected $fillable = ['name'];
 
-    public function aluno()
+    public function alunos()
     {
         return $this->hasmany(Aluno::class, 'curso_id', 'id');
     }

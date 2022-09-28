@@ -35,6 +35,10 @@ class CursoController extends Controller
 
     public function update(Curso $curso, Request $request)
     {
+        $request -> validate([
+            'name' => ['required', 'string', 'max:255']
+        ]);
+        
         $curso->update($request->all());
 
         return $curso;
@@ -43,5 +47,11 @@ class CursoController extends Controller
     public function destroy(Curso $curso)
     {
         return $curso->delete();
+    }
+
+    public function showCursosAlunos($id){
+
+        return $this->curso->where('id', $id)->with('alunos')->get()->toArray();
+
     }
 }

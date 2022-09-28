@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AlunoController;
+use App\Http\Controllers\CursoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +20,20 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResource('cursos' , App\Http\Controllers\CursoController::class);
+Route::group(['prefix'=>'cursos'], function(){
+    Route::post('', [CursoController::class,'store']);
+    Route::get('/cursos', [CursoController::class, 'index']);
+    Route::get('/{id}', [CursoController::class, 'show']);
+    Route::put('/{id}', [CursoController::class, 'update']);
+    Route::delete('/{id}', [CursoController::class, 'delete']);
+    Route::get('{id?}/alunos', [CursoController::class,'showCursosAlunos']);
+});
 
-Route::apiResource('/{curso_id}/{id}', App\Http\Controllers\AlunoController::class, show_one);
+Route::group(['prefix'=>'alunos'], function(){
+    Route::post('', [AlunoController::class,'store']);
+    Route::get('/alunos', [AlunoController::class, 'index']);
+    Route::get('/{id}', [AlunoController::class,'show']);
+    Route::put('/{id}', [AlunoController::class, 'update']);
+    Route::delete('/{id}', [AlunoController::class, 'delete']);
+    //Route::get('{id?}/cursos', [CursoController::class,'']);
+});

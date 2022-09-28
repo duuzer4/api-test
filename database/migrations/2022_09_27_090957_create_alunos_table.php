@@ -10,9 +10,7 @@ return new class extends Migration
     {
         Schema::create('alunos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('curso_id')->constrained()->cascadeOnDelete();
-
-
+            $table->foreignId('curso_id')->constrained('cursos');
             $table->string('name');
             $table->string('CPF')->unique();
             $table->date('dataNascimento');    

@@ -4,11 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Aluno;
+use App\Models\Curso;
 
 class AlunoController extends Controller
 {
     private $aluno;
-
     public function __construct(Aluno $aluno)
     {
         $this->aluno = $aluno;
@@ -19,16 +19,33 @@ class AlunoController extends Controller
         return $this->aluno->paginate(10);
     }
 
-    public function store(Aluno $aluno, Request $request)
+    public function store(Request $request)
     {
-        $this->aluno->create($request->all());
+
+        $dados = [
+            'name' => $request->name,
+            'CPF' => $request->CPF,
+            'dataNacimento' => $request->dataNacimento,
+            'curso_id'=> $request->curso_id
+        ];
+        
+        $this->aluno->create($dados);
     }
 
-    public function show($idAluno, Request $request)
+    public function show($id, Request $request)
     {
-        $aluno = Aluno::where('id', $idAluno)->first();
-        
-        $curso = Curso::where('id', $aluno->curso_id)->get();
+
+        $curso = Curso::where('id', $id)->with('alunos')->get()->toArray();
+
+        dd($curso);
+
+        $alunos = $this->aluno->where('curso_id', $id)->with('cursos')->get();
+
+
+        foreach($alunos as $aluno)
+        {
+            echo "<p>ID: {$aluno->id}<br> Nome: {$aluno->name}<br> CPF: {$aluno->CPF}<br> Data de Nascimento: {$aluno->dataNascimento}<p>";
+        }
 
     }
 
