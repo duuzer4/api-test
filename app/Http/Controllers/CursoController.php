@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Curso;
+use App\Models\Aluno;
 
 class CursoController extends Controller
 {
@@ -28,30 +29,26 @@ class CursoController extends Controller
         $this->curso->create($request->all());
     }
 
-    public function show(Curso $curso)
+    public function show($id)
     {
-        return $curso;
+        return $this->curso->where('id', $id)->first();
     }
 
-    public function update(Curso $curso, Request $request)
+    public function update($id, Request $request)
     {
         $request -> validate([
             'name' => ['required', 'string', 'max:255']
         ]);
-        
-        $curso->update($request->all());
-
-        return $curso;
+        $this->curso->where('id', $id)->update($request->all());
     }
 
-    public function destroy(Curso $curso)
+    public function destroy($id)
     {
-        return $curso->delete();
+        $this->curso->destroy($id);
     }
 
-    public function showCursosAlunos($id){
-
+    public function showAlunosCurso($id)
+    {
         return $this->curso->where('id', $id)->with('alunos')->get()->toArray();
-
     }
 }

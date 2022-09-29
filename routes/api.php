@@ -22,18 +22,18 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::group(['prefix'=>'cursos'], function(){
     Route::post('', [CursoController::class,'store']);
-    Route::get('/cursos', [CursoController::class, 'index']);
+    Route::get('', [CursoController::class, 'index']);
     Route::get('/{id}', [CursoController::class, 'show']);
     Route::put('/{id}', [CursoController::class, 'update']);
-    Route::delete('/{id}', [CursoController::class, 'delete']);
-    Route::get('{id?}/alunos', [CursoController::class,'showCursosAlunos']);
+    Route::delete('/{id}', [CursoController::class, 'destroy']);
+    Route::get('{id?}/alunos', [CursoController::class,'showAlunosCurso']);
 });
 
 Route::group(['prefix'=>'alunos'], function(){
     Route::post('', [AlunoController::class,'store']);
-    Route::get('/alunos', [AlunoController::class, 'index']);
+    Route::get('', [AlunoController::class, 'index']);
     Route::get('/{id}', [AlunoController::class,'show']);
     Route::put('/{id}', [AlunoController::class, 'update']);
-    Route::delete('/{id}', [AlunoController::class, 'delete']);
-    //Route::get('{id?}/cursos', [CursoController::class,'']);
+    Route::delete('/{id}', [AlunoController::class, 'destroy']);
+    Route::get('{id}/cursos', [AlunoController::class,'showCursosAluno']);
 });

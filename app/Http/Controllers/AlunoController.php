@@ -14,50 +14,57 @@ class AlunoController extends Controller
         $this->aluno = $aluno;
     }
 
-    public function index()
+    /* Resgata todos os alunos cadastrados */ public function index() 
     {
         return $this->aluno->paginate(10);
     }
 
+    /* Cadastra os alunos com os dados:
+    (
+        curso_id,
+        name,
+        CPF,
+        dataNascimento
+    ) 
+    */
     public function store(Request $request)
     {
 
         $dados = [
+            'curso_id'=> $request->curso_id,
             'name' => $request->name,
             'CPF' => $request->CPF,
-            'dataNacimento' => $request->dataNacimento,
-            'curso_id'=> $request->curso_id
+            'dataNascimento' => $request->dataNacimento
         ];
-        
+
         $this->aluno->create($dados);
     }
 
     public function show($id, Request $request)
     {
 
-        $curso = Curso::where('id', $id)->with('alunos')->get()->toArray();
-
-        dd($curso);
-
-        $alunos = $this->aluno->where('curso_id', $id)->with('cursos')->get();
-
-
-        foreach($alunos as $aluno)
-        {
-            echo "<p>ID: {$aluno->id}<br> Nome: {$aluno->name}<br> CPF: {$aluno->CPF}<br> Data de Nascimento: {$aluno->dataNascimento}<p>";
-        }
-
+        return $this->aluno->where('id', $id)->first();
     }
 
-    public function update(Aluno $aluno, Request $request)
+    public function update($id, Request $request)
     {
-        $aluno->update($request->all());
+        $request -> validate([
+            'curso_id' => ['required'],
+            'name' => ['required', 'string', 'max:255'],
+            'CPF' => ['required', 'string', 'max:255'],
+            'dataNascimento' => ['required', 'date']
+        ]);
 
-        return $aluno;
+        $this->aluno->where('id', $id)->update($request->all());
     }
 
     public function destroy($id)
     {
-        //
+        $this->aluno->destroy($id);
+    }
+
+    public function showCursosAluno($id)
+    {
+        return $this->aluno->where('id', $id)->with('cursos')->get()->toArray();
     }
 }
