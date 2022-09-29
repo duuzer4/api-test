@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\validation\Rule;
+use Illuminate\Support\Facades\Validator;
 use App\Models\Aluno;
 use App\Models\Curso;
 
@@ -34,7 +36,7 @@ class AlunoController extends Controller
             'curso_id'=> $request->curso_id,
             'name' => $request->name,
             'CPF' => $request->CPF,
-            'dataNascimento' => $request->dataNacimento
+            'dataNascimento' => $request->dataNascimento
         ];
 
         $this->aluno->create($dados);
@@ -46,16 +48,22 @@ class AlunoController extends Controller
         return $this->aluno->where('id', $id)->first();
     }
 
-    public function update($id, Request $request)
+    public function update($id, Request $request, Aluno $aluno)
     {
-        $request -> validate([
+        
+        /*$request -> validate([
             'curso_id' => ['required'],
             'name' => ['required', 'string', 'max:255'],
-            'CPF' => ['required', 'string', 'max:255'],
+            //'CPF' => [Rule::unique('alunos')->ignore($aluno->id), 'required', 'string', 'max:255'],
             'dataNascimento' => ['required', 'date']
+        ]);*/
+        
+        Validator::make($request->all(), [
+            'CPF' => [Rule::unique('alunos', 'CPF')->ignore($aluno), 
+            'required', 'string', 'max:255']
         ]);
-
-        $this->aluno->where('id', $id)->update($request->all());
+        
+        $this->aluno->where('id', $id)->update($request->all());        
     }
 
     public function destroy($id)
