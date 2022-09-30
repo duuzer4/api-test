@@ -16,7 +16,7 @@ class AlunoController extends Controller
         $this->aluno = $aluno;
     }
 
-    /* Resgata todos os alunos cadastrados */ public function index() 
+    /* Busca todos os alunos cadastrados */ public function index() 
     {
         return $this->aluno->paginate(10);
     }
@@ -42,35 +42,31 @@ class AlunoController extends Controller
         $this->aluno->create($dados);
     }
 
+    /* Busca um aluno especifico pelo ID */ 
     public function show($id, Request $request)
     {
 
         return $this->aluno->where('id', $id)->first();
     }
 
+    /* Atualiza o cadastro de um aluno pelo ID */ 
     public function update($id, Request $request, Aluno $aluno)
     {
-        
-        /*$request -> validate([
-            'curso_id' => ['required'],
-            'name' => ['required', 'string', 'max:255'],
-            //'CPF' => [Rule::unique('alunos')->ignore($aluno->id), 'required', 'string', 'max:255'],
-            'dataNascimento' => ['required', 'date']
-        ]);*/
-        
         Validator::make($request->all(), [
             'CPF' => [Rule::unique('alunos', 'CPF')->ignore($aluno), 
-            'required', 'string', 'max:255']
+            'required', 'integer', 'max:255']
         ]);
         
         $this->aluno->where('id', $id)->update($request->all());        
     }
 
+    /* Deleta o aluno pelo ID */
     public function destroy($id)
     {
         $this->aluno->destroy($id);
     }
 
+    /* Busca todos os cursos do aluno pelo ID */
     public function showCursosAluno($id)
     {
         return $this->aluno->where('id', $id)->with('cursos')->get()->toArray();

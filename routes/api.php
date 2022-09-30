@@ -5,20 +5,18 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AlunoController;
 use App\Http\Controllers\CursoController;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
-
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+/* Rotas para acessar as funções do controlador curso 
+
+api/cursos -> get, busco todos os cursos
+api/cursos -> post, crio um curso
+api/cursos/{curso} -> get, busco um curso especifico
+api/cursos/{curso}->put|patch, atualizo um curso especifico
+api/cursos/{curso}->delete, deleto um curso especifico
+api/curso/{id}/alunos->get, busco todos os alunos de um curso especifico  */
 
 Route::group(['prefix'=>'cursos'], function(){
     Route::post('', [CursoController::class,'store']);
@@ -28,6 +26,16 @@ Route::group(['prefix'=>'cursos'], function(){
     Route::delete('/{id}', [CursoController::class, 'destroy']);
     Route::get('{id?}/alunos', [CursoController::class,'showAlunosCurso']);
 });
+
+
+/* Rotas para acessar as funções do controlador aluno 
+
+api/alunos->post , crio um aluno
+api/alunos->get, busco todos os alunos
+api/alunos{id}->get, busco um aluno especifico
+api/alunos{id}->put, atualizo o cadastro de um aluno especifico
+api/alunos{id}->delete, deleto um aluno especifico
+api/alunos/{id}/curso->get, busco todos os cursos de um aluno especifico */
 
 Route::group(['prefix'=>'alunos'], function(){
     Route::post('', [AlunoController::class,'store']);
